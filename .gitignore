@@ -1,0 +1,36 @@
+# Diretórios de compilação e binários
+/bin/
+/out/
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Arquivos de cache do Go
+*.test
+*.tmp
+*.out
+*.prof
+*.coverprofile
+*.cov
+
+# Variáveis de ambiente
+.env*.local
+.env
+
+# Módulos e dependências
+/vendor/
+
+# Logs
+*.log
+
+# Configurações locais ou IDEs
+.idea/
+.vscode/
+*.swp
+
+# Cobertura de testes
+*.cover
+coverage/
+.coverage
+coverage.out
