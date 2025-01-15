@@ -1,9 +1,12 @@
 package main
 
 import (
-	"fmt"
+	"main.go/models"
+	"main.go/routers"
 )
 
 func main() {
-	fmt.Println("Iniciando projeto do mercadinho...")
+	models.ConnectDatabase()
+	r := routers.SetupRouter()
+	r.Run(":8080")
 }
