@@ -10,4 +10,8 @@ func RegisterOrdersRoutes(r *gin.RouterGroup) {
 	r.Use(middleware.ContentTypeMiddleware())
 
 	r.POST("", controllers.CreateOrder)
+	r.GET(":id", controllers.GetOrderById)
+	r.PUT(":id", controllers.UpdateOrder)
+	r.DELETE(":id", controllers.DeleteOrder)
+	r.GET("/get-market-orders/:id", controllers.GetMarketOrders)
 }

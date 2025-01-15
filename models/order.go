@@ -3,31 +3,23 @@ package models
 import "time"
 
 type Order struct {
-	Id              int       `json:"id"`
-	UserId          int       `json:"user_id"`
-	MarketId        int       `json:"market_id"`
+	ID              uint      `json:"id"`
+	UserId          uint      `json:"user_id"`
+	MarketId        uint      `json:"market_id"`
 	Status          string    `json:"status"`
 	TotalPrice      float64   `json:"total_price"`
 	CreatedAt       time.Time `json:"created_at"`
 	UpdatedAt       time.Time `json:"updated_at"`
 	DeliveryAddress string    `json:"delivery_address"`
-	Reviews         []Review  `json:"reviews"`
+	Reviews         []Review  `json:"reviews" gorm:"foreignKey:OrderId"`
 
 	OrderItems []OrderItem `gorm:"foreignKey:OrderId"`
-	// TODO: adicionar relação com mercado e usuario aqui
+	Market     Market      `json:"market" gorm:"foreignKey:MarketId;references:ID"`
+	User       User        `json:"user" gorm:"foreignKey:UserId;references:ID"`
 }
 
 var Orders []Order
 
-type OrderItem struct {
-	Id         int     `json:"id"`
-	OrderId    int     `json:"order_id"`
-	ProductId  int     `json:"product_id"`
-	Quantity   int     `json:"quantity"`
-	UnitPrice  float64 `json:"unit_price"`
-	TotalPrice float64 `json:"total_price"`
-
-	Product Product `gorm:"foreignKey:ProductId"`
+func (Order) TableName() string {
+	return "tbOrders"
 }
-
-var OrderItems []OrderItem

@@ -9,6 +9,7 @@ import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+	"main.go/models"
 )
 
 var (
@@ -16,7 +17,7 @@ var (
 )
 
 func setup(db *gorm.DB) {
-	db.AutoMigrate() // future models go here for autoMigrate
+	db.AutoMigrate(&models.Order{}, &models.Product{}, &models.User{}, &models.Market{}, &models.OrderItem{}, &models.Review{})
 }
 
 func ConnectWithDatabase() {
