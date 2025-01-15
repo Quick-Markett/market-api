@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"main.go/database"
 	"main.go/models"
 	response "main.go/pkg"
 )
@@ -23,14 +24,14 @@ type CreateMarketInput struct {
 
 func GetMarkets(c *gin.Context) {
 	var markets []models.Market
-	models.DB.Find(&markets)
+	database.PostgresInstance.Find(&markets)
 	response.SendGinResponse(c, http.StatusOK, markets, nil, "")
 }
 
 func GetMarket(c *gin.Context) {
 	id := c.Param("id")
 	var market models.Market
-	if err := models.DB.First(&market, id).Error; err != nil {
+	if err := database.PostgresInstance.First(&market, id).Error; err != nil {
 		response.SendGinResponse(c, http.StatusNotFound, nil, nil, "Market not found")
 		return
 	}
@@ -56,7 +57,7 @@ func CreateMarket(c *gin.Context) {
 		LogoUrl:     input.LogoUrl,
 	}
 
-	if err := models.DB.Create(&market).Error; err != nil {
+	if err := database.PostgresInstance.Create(&market).Error; err != nil {
 		response.SendGinResponse(c, http.StatusInternalServerError, nil, nil, "Failed to create a new market.")
 		return
 	}
@@ -67,7 +68,7 @@ func CreateMarket(c *gin.Context) {
 func UpdateMarket(c *gin.Context) {
 	id := c.Param("id")
 	var market models.Market
-	if err := models.DB.First(&market, id).Error; err != nil {
+	if err := database.PostgresInstance.First(&market, id).Error; err != nil {
 		response.SendGinResponse(c, http.StatusNotFound, nil, nil, "Market not found")
 		return
 	}
@@ -75,7 +76,7 @@ func UpdateMarket(c *gin.Context) {
 		response.SendGinResponse(c, http.StatusBadRequest, nil, nil, "Invalid JSON to update market.")
 		return
 	}
-	if err := models.DB.Save(&market).Error; err != nil {
+	if err := database.PostgresInstance.Save(&market).Error; err != nil {
 		response.SendGinResponse(c, http.StatusInternalServerError, nil, nil, "Failed to update market.")
 		return
 	}
@@ -85,12 +86,12 @@ func UpdateMarket(c *gin.Context) {
 func DeleteMarket(c *gin.Context) {
 	id := c.Param("id")
 	var market models.Market
-	if err := models.DB.First(&market, id).Error; err != nil {
+	if err := database.PostgresInstance.First(&market, id).Error; err != nil {
 		response.SendGinResponse(c, http.StatusNotFound, nil, nil, "Market not found")
 		return
 	}
 	now := time.Now()
-	if err := models.DB.Model(&market).UpdateColumn("deleted_at", now).Error; err != nil {
+	if err := database.PostgresInstance.Model(&market).UpdateColumn("deleted_at", now).Error; err != nil {
 		response.SendGinResponse(c, http.StatusInternalServerError, nil, nil, "Failed to delete market.")
 		return
 	}

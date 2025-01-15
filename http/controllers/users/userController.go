@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"main.go/database"
 	"main.go/models"
 	response "main.go/pkg"
 )
@@ -22,14 +23,14 @@ type CreateUserInput struct {
 
 func GetUsers(c *gin.Context) {
 	var users []models.User
-	models.DB.Find(&users)
+	database.PostgresInstance.Find(&users)
 	response.SendGinResponse(c, http.StatusOK, users, nil, "")
 }
 
 func GetUser(c *gin.Context) {
 	id := c.Param("id")
 	var user models.User
-	if err := models.DB.First(&user, id).Error; err != nil {
+	if err := database.PostgresInstance.First(&user, id).Error; err != nil {
 		response.SendGinResponse(c, http.StatusNotFound, nil, nil, "User not found")
 		return
 	}
@@ -54,7 +55,7 @@ func CreateUser(c *gin.Context) {
 		ZipCode:      input.ZipCode,
 	}
 
-	if err := models.DB.Create(&user).Error; err != nil {
+	if err := database.PostgresInstance.Create(&user).Error; err != nil {
 		response.SendGinResponse(c, http.StatusInternalServerError, nil, nil, "Failed to create a new user.")
 		return
 	}
@@ -65,7 +66,7 @@ func CreateUser(c *gin.Context) {
 func UpdateUser(c *gin.Context) {
 	id := c.Param("id")
 	var user models.User
-	if err := models.DB.First(&user, id).Error; err != nil {
+	if err := database.PostgresInstance.First(&user, id).Error; err != nil {
 		response.SendGinResponse(c, http.StatusNotFound, nil, nil, "User not found")
 		return
 	}
@@ -75,7 +76,7 @@ func UpdateUser(c *gin.Context) {
 	}
 	now := time.Now()
 	user.UpdatedAt = &now
-	if err := models.DB.Save(&user).Error; err != nil {
+	if err := database.PostgresInstance.Save(&user).Error; err != nil {
 		response.SendGinResponse(c, http.StatusInternalServerError, nil, nil, "Failed to update user.")
 		return
 	}
@@ -85,12 +86,12 @@ func UpdateUser(c *gin.Context) {
 func DeleteUser(c *gin.Context) {
 	id := c.Param("id")
 	var user models.User
-	if err := models.DB.First(&user, id).Error; err != nil {
+	if err := database.PostgresInstance.First(&user, id).Error; err != nil {
 		response.SendGinResponse(c, http.StatusNotFound, nil, nil, "User not found")
 		return
 	}
 	now := time.Now()
-	if err := models.DB.Model(&user).UpdateColumn("deleted_at", now).Error; err != nil {
+	if err := database.PostgresInstance.Model(&user).UpdateColumn("deleted_at", now).Error; err != nil {
 		response.SendGinResponse(c, http.StatusInternalServerError, nil, nil, "Failed to delete user.")
 		return
 	}
