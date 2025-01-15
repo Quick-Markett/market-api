@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"main.go/models"
+	response "main.go/pkg"
 )
 
 type CreateUserInput struct {
@@ -22,23 +23,23 @@ type CreateUserInput struct {
 func GetUsers(c *gin.Context) {
 	var users []models.User
 	models.DB.Find(&users)
-	c.JSON(http.StatusOK, users)
+	response.SendGinResponse(c, http.StatusOK, users, nil, "")
 }
 
 func GetUser(c *gin.Context) {
 	id := c.Param("id")
 	var user models.User
 	if err := models.DB.First(&user, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"message": "User not found"})
+		response.SendGinResponse(c, http.StatusNotFound, nil, nil, "User not found")
 		return
 	}
-	c.JSON(http.StatusOK, user)
+	response.SendGinResponse(c, http.StatusOK, user, nil, "")
 }
 
 func CreateUser(c *gin.Context) {
 	var input CreateUserInput
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		response.SendGinResponse(c, http.StatusBadRequest, nil, nil, "Invalid JSON to create user.")
 		return
 	}
 
@@ -53,35 +54,45 @@ func CreateUser(c *gin.Context) {
 		ZipCode:      input.ZipCode,
 	}
 
-	models.DB.Create(&user)
-	c.JSON(http.StatusCreated, user)
+	if err := models.DB.Create(&user).Error; err != nil {
+		response.SendGinResponse(c, http.StatusInternalServerError, nil, nil, "Failed to create a new user.")
+		return
+	}
+
+	response.SendGinResponse(c, http.StatusCreated, user, nil, "")
 }
 
 func UpdateUser(c *gin.Context) {
 	id := c.Param("id")
 	var user models.User
 	if err := models.DB.First(&user, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"message": "User not found"})
+		response.SendGinResponse(c, http.StatusNotFound, nil, nil, "User not found")
 		return
 	}
 	if err := c.ShouldBindJSON(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		response.SendGinResponse(c, http.StatusBadRequest, nil, nil, "Invalid JSON to update user.")
 		return
 	}
 	now := time.Now()
 	user.UpdatedAt = &now
-	models.DB.Save(&user)
-	c.JSON(http.StatusOK, user)
+	if err := models.DB.Save(&user).Error; err != nil {
+		response.SendGinResponse(c, http.StatusInternalServerError, nil, nil, "Failed to update user.")
+		return
+	}
+	response.SendGinResponse(c, http.StatusOK, user, nil, "")
 }
 
 func DeleteUser(c *gin.Context) {
 	id := c.Param("id")
 	var user models.User
 	if err := models.DB.First(&user, id).Error; err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"message": "User not found"})
+		response.SendGinResponse(c, http.StatusNotFound, nil, nil, "User not found")
 		return
 	}
 	now := time.Now()
-	models.DB.Model(&user).UpdateColumn("deleted_at", now)
-	c.JSON(http.StatusOK, gin.H{"message": "User deleted"})
+	if err := models.DB.Model(&user).UpdateColumn("deleted_at", now).Error; err != nil {
+		response.SendGinResponse(c, http.StatusInternalServerError, nil, nil, "Failed to delete user.")
+		return
+	}
+	response.SendGinResponse(c, http.StatusOK, gin.H{"message": "User deleted"}, nil, "")
 }
