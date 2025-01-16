@@ -1,4 +1,4 @@
-package productsRoutes 
+package productsRoutes
 
 import (
 	"github.com/gin-gonic/gin"
@@ -14,4 +14,5 @@ func RegisterProductsRoutes(r *gin.RouterGroup) {
 	r.PUT(":id", controllers.UpdateProduct)
 	r.DELETE(":id", controllers.DeleteProduct)
 	r.GET("/get-market-products/:id", controllers.GetMarketProducts)
+	r.GET("/filter", controllers.GetFilteredProducts)
 }

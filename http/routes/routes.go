@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/gin-gonic/gin"
+	categoriesRoutes "main.go/http/routes/categories"
 	healthRoutes "main.go/http/routes/health"
 	marketRoutes "main.go/http/routes/markets"
 	orderItemsRoutes "main.go/http/routes/orderItems"
@@ -36,6 +37,10 @@ func HandleRequest(r *gin.Engine) {
 
 	reviewsPath := r.Group("/reviews"); {
 		reviewsRoutes.RegisterReviewRoutes(reviewsPath)
+	}
+
+	categoriesPath := r.Group("/categories"); {
+		categoriesRoutes.RegisterCategoriesRoutes(categoriesPath)
 	}
 
 	healthPaths := r.Group("/health"); {

@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"main.go/database"
 	"main.go/models"
-	response "main.go/pkg"
+	response "main.go/pkg/response"
 )
 
 func CreateOrder(c *gin.Context) {

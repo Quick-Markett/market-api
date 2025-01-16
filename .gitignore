@@ -26,7 +26,6 @@
 
 # Configurações locais ou IDEs
 .idea/
-.vscode/
 *.swp
 
 # Cobertura de testes
