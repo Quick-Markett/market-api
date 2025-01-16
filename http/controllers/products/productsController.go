@@ -40,9 +40,15 @@ func GetProductById(c *gin.Context) {
 
 func GetMarketProducts(c *gin.Context) {
 	marketID := c.Param("id")
+	category := c.Query("category")
 	var products []models.Product
 
-	result := database.PostgresInstance.Where("product_id = ?", marketID).Find(&products)
+	query := database.PostgresInstance.Where("market_id = ?", marketID)
+	if category != "" {
+		query = query.Where("category = ?", category)
+	}
+
+	result := query.Find(&products)
 	if result.Error != nil {
 		response.SendGinResponse(c, http.StatusInternalServerError, nil, nil, "Failed to retrieve products.")
 		return
