@@ -15,4 +15,6 @@ func RegisterMarketsRoutes(r *gin.RouterGroup) {
 	r.PUT(":id", controllers.UpdateMarket)
 	r.DELETE(":id", controllers.DeleteMarket)
 
+	// NEARBY MARKETS
+	r.POST("/nearby", controllers.FindMarketsWithinRadius)
 }
