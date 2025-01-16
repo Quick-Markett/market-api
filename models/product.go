@@ -9,10 +9,10 @@ type Product struct {
 	Stock              int     `json:"stock"`
 	ProductImage       string  `json:"product_image"`
 	IsActive           bool    `json:"is_active"`
+	Category           string  `json:"category" gorm:"type:product_category;default:'Food'"`
+	// TODO: precisamos ver depois quais serão as categorias, por enquanto este enum é apenas um exemplo
 
 	Market Market `json:"market" gorm:"foreignKey:MarketId;references:ID"`
-
-	// TODO: adicioanr campo de categoria futuramente
 }
 
 var Products []Product

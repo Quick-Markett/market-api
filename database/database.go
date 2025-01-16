@@ -17,7 +17,11 @@ var (
 )
 
 func setup(db *gorm.DB) {
-	db.AutoMigrate(&models.Order{}, &models.Product{}, &models.User{}, &models.Market{}, &models.OrderItem{}, &models.Review{})
+
+	// exemplo de enum para categoria de produto, depois a gente conversa como vai ficar
+	db.Exec("CREATE TYPE product_category AS ENUM ('Electronics', 'Clothing', 'Food', 'Books');")
+
+	db.AutoMigrate(&models.User{}, &models.Product{}, &models.Market{}, &models.Order{}, &models.OrderItem{}, &models.Review{})
 }
 
 func ConnectWithDatabase() {
