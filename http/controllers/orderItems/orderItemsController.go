@@ -16,7 +16,7 @@ func CreateOrderItem(c *gin.Context) {
 		return
 	}
 
-	result := database.PostgresInstance.Create(newOrderItem)
+	result := database.PostgresInstance.Create(&newOrderItem)
 	if result.Error != nil {
 		response.SendGinResponse(c, http.StatusInternalServerError, nil, nil, "Failed to create a new order item.")
 		return
@@ -29,20 +29,20 @@ func GetOrderItemById(c *gin.Context) {
 	id := c.Param("id")
 	var orderItem models.OrderItem
 
-	result := database.PostgresInstance.First(&orderItem, id)
+	result := database.PostgresInstance.Preload("Product").First(&orderItem, id)
 	if result.Error != nil {
 		response.SendGinResponse(c, http.StatusNotFound, nil, nil, "Order item Item not found.")
 		return
 	}
 
-	response.SendGinResponse(c, http.StatusOK, orderItem, nil, "Order item retrieved successfully.")
+	response.SendGinResponse(c, http.StatusOK, orderItem, nil, "")
 }
 
 func GetOrderItems(c *gin.Context) {
 	order := c.Param("id")
 	var items []models.OrderItem
 
-	result := database.PostgresInstance.Where("market_id = ?", order).Find(&items)
+	result := database.PostgresInstance.Preload("Product").Where("market_id = ?", order).Find(&items)
 	if result.Error != nil {
 		response.SendGinResponse(c, http.StatusInternalServerError, nil, nil, "Failed to retrieve order items.")
 		return
@@ -53,7 +53,7 @@ func GetOrderItems(c *gin.Context) {
 		return
 	}
 
-	response.SendGinResponse(c, http.StatusOK, items, nil, "Order items retrieved successfully.")
+	response.SendGinResponse(c, http.StatusOK, items, nil, "")
 }
 
 func UpdateOrderItem(c *gin.Context) {
@@ -77,7 +77,7 @@ func UpdateOrderItem(c *gin.Context) {
 		return
 	}
 
-	response.SendGinResponse(c, http.StatusOK, orderItem, nil, "Order item updated successfully.")
+	response.SendGinResponse(c, http.StatusOK, orderItem, nil, "")
 }
 
 func DeleteOrderItem(c *gin.Context) {
@@ -94,5 +94,5 @@ func DeleteOrderItem(c *gin.Context) {
 		return
 	}
 
-	response.SendGinResponse(c, http.StatusOK, nil, nil, "Order item deleted successfully.")
+	response.SendGinResponse(c, http.StatusOK, nil, nil, "")
 }

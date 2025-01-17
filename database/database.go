@@ -19,9 +19,10 @@ var (
 func setup(db *gorm.DB) {
 
 	// exemplo de enum para categoria de produto, depois a gente conversa como vai ficar
+	// Será que não ficaria melhor a categoria ser algo relativo? pensei que algo a ser criado tipo pelos mercados mesmo, tipo, carnes, cosméticos, etc... São coisas fixas, mas talvez acho que valeria a pena ser dinâmico.
 	db.Exec("CREATE TYPE product_category AS ENUM ('Electronics', 'Clothing', 'Food', 'Books');")
 
-	db.AutoMigrate(&models.User{}, &models.Product{}, &models.Market{}, &models.Order{}, &models.OrderItem{}, &models.Review{})
+	db.AutoMigrate(&models.User{}, &models.Product{}, &models.Market{}, &models.Order{}, &models.OrderItem{}, &models.Review{}, &models.Category{})
 }
 
 func ConnectWithDatabase() {

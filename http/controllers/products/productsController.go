@@ -17,7 +17,7 @@ func CreateProduct(c *gin.Context) {
 		return
 	}
 
-	result := database.PostgresInstance.Create(newProduct)
+	result := database.PostgresInstance.Create(&newProduct)
 	if result.Error != nil {
 		response.SendGinResponse(c, http.StatusInternalServerError, nil, nil, "Failed to create a new product.")
 		return
@@ -30,13 +30,13 @@ func GetProductById(c *gin.Context) {
 	id := c.Param("id")
 	var product models.Product
 
-	result := database.PostgresInstance.First(&product, id)
+	result := database.PostgresInstance.Preload("Market").First(&product, id)
 	if result.Error != nil {
 		response.SendGinResponse(c, http.StatusNotFound, nil, nil, "Product not found.")
 		return
 	}
 
-	response.SendGinResponse(c, http.StatusOK, product, nil, "Product retrieved successfully.")
+	response.SendGinResponse(c, http.StatusOK, product, nil, "")
 }
 
 func GetMarketProducts(c *gin.Context) {
@@ -60,7 +60,7 @@ func GetMarketProducts(c *gin.Context) {
 		return
 	}
 
-	response.SendGinResponse(c, http.StatusOK, products, nil, "Market products retrieved successfully.")
+	response.SendGinResponse(c, http.StatusOK, products, nil, "")
 }
 
 func UpdateProduct(c *gin.Context) {
@@ -84,7 +84,7 @@ func UpdateProduct(c *gin.Context) {
 		return
 	}
 
-	response.SendGinResponse(c, http.StatusOK, product, nil, "Product updated successfully.")
+	response.SendGinResponse(c, http.StatusOK, product, nil, "")
 }
 
 func DeleteProduct(c *gin.Context) {
@@ -101,7 +101,7 @@ func DeleteProduct(c *gin.Context) {
 		return
 	}
 
-	response.SendGinResponse(c, http.StatusOK, nil, nil, "Product deleted successfully.")
+	response.SendGinResponse(c, http.StatusOK, nil, nil, "")
 }
 
 func GetFilteredProducts(c *gin.Context) {
@@ -134,5 +134,5 @@ func GetFilteredProducts(c *gin.Context) {
 		return
 	}
 
-	response.SendGinResponse(c, http.StatusOK, products, nil, "Products retrieved successfully.")
+	response.SendGinResponse(c, http.StatusOK, products, nil, "")
 }

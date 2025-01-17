@@ -16,7 +16,7 @@ func CreateCategory(c *gin.Context) {
 		return
 	}
 
-	result := database.PostgresInstance.Create(newCategory)
+	result := database.PostgresInstance.Create(&newCategory)
 	if result.Error != nil {
 		response.SendGinResponse(c, http.StatusInternalServerError, nil, nil, "Failed to create a new category.")
 		return
@@ -35,7 +35,7 @@ func GetCategoryById(c *gin.Context) {
 		return
 	}
 
-	response.SendGinResponse(c, http.StatusOK, category, nil, "Category retrieved successfully.")
+	response.SendGinResponse(c, http.StatusOK, category, nil, "")
 }
 
 func GetMarketCategories(c *gin.Context) {
@@ -53,7 +53,7 @@ func GetMarketCategories(c *gin.Context) {
 		return
 	}
 
-	response.SendGinResponse(c, http.StatusOK, categories, nil, "Market categories retrieved successfully.")
+	response.SendGinResponse(c, http.StatusOK, categories, nil, "")
 }
 
 func UpdateCategory(c *gin.Context) {
@@ -77,7 +77,7 @@ func UpdateCategory(c *gin.Context) {
 		return
 	}
 
-	response.SendGinResponse(c, http.StatusOK, category, nil, "Category updated successfully.")
+	response.SendGinResponse(c, http.StatusOK, category, nil, "")
 }
 
 func DeleteCategory(c *gin.Context) {
@@ -94,5 +94,5 @@ func DeleteCategory(c *gin.Context) {
 		return
 	}
 
-	response.SendGinResponse(c, http.StatusOK, nil, nil, "Category deleted successfully.")
+	response.SendGinResponse(c, http.StatusOK, nil, nil, "")
 }

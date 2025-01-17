@@ -3,9 +3,9 @@ package models
 import "time"
 
 type Category struct {
-	ID          uint       `json:"id" gorm:"primary_key"`
+	ID          uint       `json:"id" gorm:"primaryKey;autoIncrement"`
 	Name        string     `json:"name" gorm:"not null"`
-	MarketId    uint       `json:"market_id"`
+	MarketId    int        `json:"market_id"`
 	Slug        string     `json:"slug"`
 	Description string     `json:"description"`
 	CreatedAt   time.Time  `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`

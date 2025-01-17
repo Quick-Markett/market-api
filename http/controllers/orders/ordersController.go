@@ -16,7 +16,7 @@ func CreateOrder(c *gin.Context) {
 		return
 	}
 
-	result := database.PostgresInstance.Create(newOrder)
+	result := database.PostgresInstance.Create(&newOrder)
 	if result.Error != nil {
 		response.SendGinResponse(c, http.StatusInternalServerError, nil, nil, "Failed to create a new order.")
 		return
@@ -29,20 +29,39 @@ func GetOrderById(c *gin.Context) {
 	id := c.Param("id")
 	var order models.Order
 
-	result := database.PostgresInstance.First(&order, id)
+	result := database.PostgresInstance.Preload("Market").Preload("User").Preload("OrderItems").First(&order, id)
 	if result.Error != nil {
 		response.SendGinResponse(c, http.StatusNotFound, nil, nil, "Order not found.")
 		return
 	}
 
-	response.SendGinResponse(c, http.StatusOK, order, nil, "Order retrieved successfully.")
+	response.SendGinResponse(c, http.StatusOK, order, nil, "")
+}
+
+func GetUserOrderItems(c *gin.Context) {
+	userId := c.Param("id")
+	var orders []models.Order
+
+	result := database.PostgresInstance.
+		Preload("Market").
+		Preload("User").
+		Preload("OrderItems").
+		Where("user_id = ?", userId).
+		Find(&orders)
+
+	if result.Error != nil {
+		response.SendGinResponse(c, http.StatusNotFound, nil, nil, "No orders found for this user.")
+		return
+	}
+
+	response.SendGinResponse(c, http.StatusOK, orders, nil, "")
 }
 
 func GetMarketOrders(c *gin.Context) {
 	marketID := c.Param("id")
 	var orders []models.Order
 
-	result := database.PostgresInstance.Where("market_id = ?", marketID).Find(&orders)
+	result := database.PostgresInstance.Preload("Market").Preload("User").Preload("OrderItems").Where("market_id = ?", marketID).Find(&orders)
 	if result.Error != nil {
 		response.SendGinResponse(c, http.StatusInternalServerError, nil, nil, "Failed to retrieve orders.")
 		return
@@ -53,7 +72,7 @@ func GetMarketOrders(c *gin.Context) {
 		return
 	}
 
-	response.SendGinResponse(c, http.StatusOK, orders, nil, "Market orders retrieved successfully.")
+	response.SendGinResponse(c, http.StatusOK, orders, nil, "")
 }
 
 func UpdateOrder(c *gin.Context) {
@@ -77,7 +96,7 @@ func UpdateOrder(c *gin.Context) {
 		return
 	}
 
-	response.SendGinResponse(c, http.StatusOK, order, nil, "Order updated successfully.")
+	response.SendGinResponse(c, http.StatusOK, order, nil, "")
 }
 
 func DeleteOrder(c *gin.Context) {
@@ -94,5 +113,5 @@ func DeleteOrder(c *gin.Context) {
 		return
 	}
 
-	response.SendGinResponse(c, http.StatusOK, nil, nil, "Order deleted successfully.")
+	response.SendGinResponse(c, http.StatusOK, nil, nil, "")
 }

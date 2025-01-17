@@ -16,7 +16,7 @@ func CreateReview(c *gin.Context) {
 		return
 	}
 
-	result := database.PostgresInstance.Create(newReview)
+	result := database.PostgresInstance.Create(&newReview)
 	if result.Error != nil {
 		response.SendGinResponse(c, http.StatusInternalServerError, nil, nil, "Failed to create a new review.")
 		return
@@ -29,20 +29,20 @@ func GetReviewById(c *gin.Context) {
 	id := c.Param("id")
 	var review models.Review
 
-	result := database.PostgresInstance.First(&review, id)
+	result := database.PostgresInstance.Preload("Order").Preload("Order").First(&review, id)
 	if result.Error != nil {
 		response.SendGinResponse(c, http.StatusNotFound, nil, nil, "Review not found.")
 		return
 	}
 
-	response.SendGinResponse(c, http.StatusOK, review, nil, "Review retrieved successfully.")
+	response.SendGinResponse(c, http.StatusOK, review, nil, "")
 }
 
 func GetOrderReview(c *gin.Context) {
 	marketID := c.Param("id")
 	var reviews []models.Review
 
-	result := database.PostgresInstance.Where("market_id = ?", marketID).Find(&reviews)
+	result := database.PostgresInstance.Preload("Order").Preload("Order").Where("market_id = ?", marketID).Find(&reviews)
 	if result.Error != nil {
 		response.SendGinResponse(c, http.StatusInternalServerError, nil, nil, "Failed to retrieve reviews.")
 		return
@@ -53,7 +53,7 @@ func GetOrderReview(c *gin.Context) {
 		return
 	}
 
-	response.SendGinResponse(c, http.StatusOK, reviews, nil, "Market reviews retrieved successfully.")
+	response.SendGinResponse(c, http.StatusOK, reviews, nil, "")
 }
 
 func UpdateReview(c *gin.Context) {
@@ -77,7 +77,7 @@ func UpdateReview(c *gin.Context) {
 		return
 	}
 
-	response.SendGinResponse(c, http.StatusOK, review, nil, "Review updated successfully.")
+	response.SendGinResponse(c, http.StatusOK, review, nil, "")
 }
 
 func DeleteReview(c *gin.Context) {
@@ -94,5 +94,5 @@ func DeleteReview(c *gin.Context) {
 		return
 	}
 
-	response.SendGinResponse(c, http.StatusOK, nil, nil, "Review deleted successfully.")
+	response.SendGinResponse(c, http.StatusOK, nil, nil, "")
 }

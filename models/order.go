@@ -3,9 +3,9 @@ package models
 import "time"
 
 type Order struct {
-	ID              uint      `json:"id"`
-	UserId          uint      `json:"user_id"`
-	MarketId        uint      `json:"market_id"`
+	ID              uint      `json:"id" gorm:"primaryKey;autoIncrement"`
+	UserId          int       `json:"user_id"`
+	MarketId        int       `json:"market_id"`
 	Status          string    `json:"status"`
 	TotalPrice      float64   `json:"total_price"`
 	CreatedAt       time.Time `json:"created_at"`

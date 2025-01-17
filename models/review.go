@@ -3,9 +3,9 @@ package models
 import "time"
 
 type Review struct {
-	ID        uint      `json:"id"`
-	ProductId uint      `json:"product_id"`
-	OrderId   uint      `json:"order_id"`
+	ID        uint      `json:"id" gorm:"primaryKey;autoIncrement"`
+	ProductId int       `json:"product_id"`
+	OrderId   int       `json:"order_id"`
 	Rating    int       `json:"rating"`
 	Comment   string    `json:"comment"`
 	CreatedAt time.Time `json:"created_at"`
