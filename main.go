@@ -7,10 +7,14 @@ import (
 	"github.com/gin-gonic/gin"
 	"main.go/database"
 	"main.go/http/routes"
+	middleware "main.go/middlewares"
 )
 
 func main() {
 	r := gin.Default()
+
+	middleware.PrometheusInit()
+	r.Use(middleware.TrackMetrics())
 
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"*"},
