@@ -1,0 +1,22 @@
+service: hermes-api
+
+provider:
+  name: aws
+  runtime: provided.al2
+  region: us-east-2
+  stage: ${opt:stage, 'dev'}
+
+functions:
+  api:
+    handler: bin/bootstrap
+    events:
+    ## Rotas para o API Gateway, colocar o path e o método HTTP
+      - http:
+          path: /users
+          method: GET
+
+package:
+  exclude:
+    - node_modules/**
+    - .gitignore
+    - .git/**

@@ -22,3 +22,7 @@ down-prometheus:
 clean:
 	$(DOCKER_COMPOSE) down --volumes --remove-orphans
 	docker image prune -f
+
+build: 
+	go mod tidy
+	set GOARCH=amd64 && set GOOS=linux && go build -v -ldflags="-s -w" -o bin/main ./main.go
