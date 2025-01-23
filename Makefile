@@ -25,4 +25,4 @@ clean:
 
 build: 
 	go mod tidy
-	set GOARCH=amd64 && set GOOS=linux && go build -v -ldflags="-s -w" -o bin/main ./main.go
+	set GOARCH=amd64 && set GOOS=linux && go build -v -ldflags="-s -w" -o bin/bootstrap main.go
