@@ -1,0 +1,34 @@
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - monitoring
+
+  grafana:
+    image: grafana/grafana-oss:latest
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    networks:
+      - monitoring
+    depends_on:
+      - prometheus
+
+  hermes-api:
+    build: .
+    container_name: hermes-api
+    ports:
+      - "8081:8080"
+    networks:
+      - monitoring
+
+networks:
+  monitoring:
+    driver: bridge

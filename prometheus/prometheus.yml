@@ -1,0 +1,7 @@
+global:
+  scrape_interval: "15s"
+
+scrape_configs:
+  - job_name: "hermes-api"
+    static_configs:
+      - targets: ['hermes-api:8080']
