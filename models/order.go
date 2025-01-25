@@ -9,9 +9,8 @@ type Order struct {
 	Status          string    `json:"status"`
 	TotalPrice      float64   `json:"total_price"`
 	CreatedAt       time.Time `json:"created_at"`
-	UpdatedAt       time.Time `json:"updated_at"`
+	UpdatedAt       *time.Time `json:"updated_at" gorm:"-"`
 	DeliveryAddress string    `json:"delivery_address"`
-	Reviews         []Review  `json:"reviews" gorm:"foreignKey:OrderId"`
 
 	OrderItems []OrderItem `gorm:"foreignKey:OrderId"`
 	Market     Market      `json:"market" gorm:"foreignKey:MarketId;references:ID"`
