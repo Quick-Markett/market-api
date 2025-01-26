@@ -37,32 +37,6 @@ func GetUser(c *gin.Context) {
 	response.SendGinResponse(c, http.StatusOK, user, nil, "")
 }
 
-func CreateUser(c *gin.Context) {
-	var input CreateUserInput
-	if err := c.ShouldBindJSON(&input); err != nil {
-		response.SendGinResponse(c, http.StatusBadRequest, nil, nil, "Invalid JSON to create user.")
-		return
-	}
-
-	user := models.User{
-		Name:         input.Name,
-		Email:        input.Email,
-		PasswordHash: input.PasswordHash,
-		PhoneNumber:  input.PhoneNumber,
-		Address:      input.Address,
-		City:         input.City,
-		State:        input.State,
-		ZipCode:      input.ZipCode,
-	}
-
-	if err := database.PostgresInstance.Create(&user).Error; err != nil {
-		response.SendGinResponse(c, http.StatusInternalServerError, nil, nil, "Failed to create a new user.")
-		return
-	}
-
-	response.SendGinResponse(c, http.StatusCreated, user, nil, "")
-}
-
 func UpdateUser(c *gin.Context) {
 	id := c.Param("id")
 	var user models.User

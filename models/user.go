@@ -15,6 +15,7 @@ type User struct {
 	CreatedAt   time.Time  `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
 	UpdatedAt   *time.Time `json:"updated_at" gorm:"-"`
 	IsActive    bool       `json:"is_active" gorm:"default:true"`
+	GoogleId    *string    `json:"google_id" gorm:"uniqueIndex"`
 	DeletedAt   *time.Time `json:"deleted_at" gorm:"index"`
 }
 
