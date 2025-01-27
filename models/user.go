@@ -4,7 +4,8 @@ import "time"
 
 type User struct {
 	ID             uint       `json:"id" gorm:"primaryKey;autoIncrement"`
-	Name           string     `json:"name" gorm:"not null"`
+	Firstname      string     `json:"firstname" gorm:"not null"`
+	Lastname       string     `json:"lastname" gorm:"not null"`
 	Email          string     `json:"email" gorm:"not null;unique"`
 	Password       string     `json:"password" gorm:"not null"`
 	PhoneNumber    string     `json:"phone_number"`
