@@ -24,5 +24,5 @@ clean:
 	docker image prune -f
 
 build: 
-	go mod tidy
-	set GOARCH=amd64 && set GOOS=linux && go build -v -ldflags="-s -w" -o bin/bootstrap main.go
+    go mod tidy
+    GOARCH=amd64 GOOS=linux go build -o bootstrap main.go

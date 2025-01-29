@@ -1,3 +1,7 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: medinaorg
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+app: medinaorg
 service: hermes-api
 
 provider:
@@ -8,12 +12,430 @@ provider:
 
 functions:
   api:
-    handler: bin/bootstrap
+    handler: bootstrap
+    timeout: 30
     events:
-    ## Rotas para o API Gateway, colocar o path e o método HTTP
+      - http:
+          path: /orders
+          method: POST
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /orders/{id}
+          method: GET
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /orders/{id}
+          method: PUT
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /orders/{id}
+          method: DELETE
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /orders/get-market-orders/{id}
+          method: GET
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /orders/get-user-orders/{id}
+          method: GET
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
       - http:
           path: /users
           method: GET
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /users/{id}
+          method: GET
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /users/{id}
+          method: PUT
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /users/{id}
+          method: DELETE
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /users/sso/create-user
+          method: POST
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /users/sso/login-user/{email}
+          method: POST
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /users/google/create-user
+          method: POST
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /users/google/login-user/{googleId}
+          method: POST
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /markets
+          method: GET
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /markets/{id}
+          method: GET
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /markets/{id}
+          method: PUT
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /markets/{id}
+          method: DELETE
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /markets
+          method: POST
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /markets/nearby
+          method: POST
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /products
+          method: POST
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /products/{id}
+          method: GET
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /products/{id}
+          method: PUT
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /products/{id}
+          method: DELETE
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /products/get-market-products/{id}
+          method: GET
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /products/filter
+          method: GET
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /order-items
+          method: POST
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /order-items/{id}
+          method: GET
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /order-items/{id}
+          method: PUT
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /order-items/{id}
+          method: DELETE
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /order-items/get-order-items/{id}
+          method: GET
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /reviews
+          method: POST
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /reviews/{id}
+          method: GET
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /reviews/{id}
+          method: PUT
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /reviews/{id}
+          method: DELETE
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /reviews/get-order-review/{id}
+          method: GET
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /categories
+          method: POST
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /categories/{id}
+          method: GET
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /categories/{id}
+          method: PUT
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /categories/{id}
+          method: DELETE
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /categories/get-market-categories/{id}
+          method: GET
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+      - http:
+          path: /health
+          method: GET
+          cors:
+            origins:
+              - "*"
+            headers:
+              - Content-Type
+              - Authorization
+            allowCredentials: true
+
 
 package:
   exclude:
