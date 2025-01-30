@@ -3,18 +3,24 @@ package main
 import (
 	"fmt"
 
-	"github.com/gin-contrib/cors"
-	"github.com/gin-gonic/gin"
 	"main.go/database"
 	"main.go/http/routes"
-	middleware "main.go/middlewares"
+
+	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-lambda-go/lambda"
+	ginadapter "github.com/awslabs/aws-lambda-go-api-proxy/gin"
+	"github.com/gin-contrib/cors"
+	"github.com/gin-gonic/gin"
+	middlewares "main.go/middlewares"
 )
 
-func main() {
+var ginLambda *ginadapter.GinLambda
+
+func init() {
 	r := gin.Default()
 
-	middleware.PrometheusInit()
-	r.Use(middleware.TrackMetrics())
+	middlewares.PrometheusInit()
+	r.Use(middlewares.TrackMetrics())
 
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"*"},
@@ -26,6 +32,14 @@ func main() {
 
 	database.ConnectWithDatabase()
 	routes.HandleRequest(r)
+	ginLambda = ginadapter.New(r)
+}
 
+func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	return ginLambda.Proxy(req)
+}
+
+func main() {
 	fmt.Println("Iniciando projeto do mercadinho...")
+	lambda.Start(Handler)
 }
