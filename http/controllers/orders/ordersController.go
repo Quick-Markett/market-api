@@ -39,7 +39,7 @@ func GetOrderById(c *gin.Context) {
 }
 
 func GetUserOrderItems(c *gin.Context) {
-	userId := c.Param("id")
+	userId := c.Param("userId")
 	var orders []models.Order
 
 	result := database.PostgresInstance.

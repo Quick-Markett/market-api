@@ -14,5 +14,5 @@ func RegisterOrdersRoutes(r *gin.RouterGroup) {
 	r.PUT(":id", controllers.UpdateOrder)
 	r.DELETE(":id", controllers.DeleteOrder)
 	r.GET("/get-market-orders/:id", controllers.GetMarketOrders)
-	r.GET("/get-user-orders/:id", controllers.GetUserOrderItems)
+	r.GET("/get-user-orders/:userId", controllers.GetUserOrderItems)
 }
