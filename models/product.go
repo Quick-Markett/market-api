@@ -12,7 +12,7 @@ type Product struct {
 	ProductImage       string     `json:"product_image"`
 	CreatedAt          time.Time  `json:"created_at"`
 	UpdatedAt          *time.Time `json:"updated_at" gorm:"-"`
-	IsActive           bool       `json:"is_active"`
+	IsActive           bool       `json:"is_active" gorm:"default:true"`
 	// Category           string  `json:"category" gorm:"type:product_category;default:'Food'"`
 	// TODO: precisamos ver depois quais serão as categorias, por enquanto este enum é apenas um exemplo
 
