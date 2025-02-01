@@ -6,11 +6,22 @@ on:
     branches:
       - master
 
+env:
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
 jobs:
   continuos-integration:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Verify Directory and Go Mod
+        run: |
+          pwd
+          ls
+
       - name: Setup GO 1.23.x
         uses: actions/setup-go@v5
         with:
@@ -19,7 +30,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          go get .
+          go mod tidy
 
       - name: Run Build
         run: go build -v ./...

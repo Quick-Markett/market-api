@@ -18,8 +18,6 @@ WORKDIR /app
 
 COPY --from=builder /app/main .
 
-COPY .env .env
-
 RUN ls -l /app
 
 RUN chmod +x /app/main
