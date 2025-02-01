@@ -19,7 +19,7 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          go get .
+          go mod tidy
 
       - name: Run Build
         run: go build -v ./...
