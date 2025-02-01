@@ -27,7 +27,6 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          go mod init
           go mod tidy
 
       - name: Run Build
