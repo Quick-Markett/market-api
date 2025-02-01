@@ -13,7 +13,7 @@ type Market struct {
 	ZipCode         string     `json:"zip_code"`
 	Description     string     `json:"description"`
 	LogoUrl         string     `json:"logo_url"`
-	DeliveryPrice   string     `json:"delivery_price" gorm:"default:0"`
+	DeliveryPrice   float64    `json:"delivery_price" gorm:"default:0"`
 	DeliveryMinTime float64    `json:"delivery_min_time" gorm:"default:0"`
 	DeliveryMaxTime float64    `json:"delivery_max_time" gorm:"default:30"`
 	CreatedAt       time.Time  `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
