@@ -95,4 +95,5 @@ func DeleteOrderItem(c *gin.Context) {
 	}
 
 	response.SendGinResponse(c, http.StatusOK, nil, nil, "")
+	
 }
