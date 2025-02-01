@@ -38,10 +38,3 @@ jobs:
       - name: Build Docker Image
         run: |
           docker build -t hermes-api:latest .
-
-      - name: Run Docker Container with Environment Variables
-        run: |
-          docker run \
-            -e DATABASE_URL=$DATABASE_URL \
-            -e GIN_MODE=release \
-            hermes-api:latest
