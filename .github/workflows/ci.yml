@@ -43,4 +43,5 @@ jobs:
         run: |
           docker run \
             -e DATABASE_URL=$DATABASE_URL \
+            -e GIN_MODE=release \
             hermes-api:latest
