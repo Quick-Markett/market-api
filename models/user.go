@@ -4,15 +4,13 @@ import "time"
 
 type User struct {
 	ID             uint       `json:"id" gorm:"primaryKey;autoIncrement"`
-	Firstname      string     `json:"firstname" gorm:"not null"`
-	Lastname       string     `json:"lastname" gorm:"not null"`
+	Name           string     `json:"name" gorm:"not null"`
 	Email          string     `json:"email" gorm:"not null;unique"`
 	Password       string     `json:"password" gorm:"not null"`
 	PhoneNumber    string     `json:"phone_number"`
 	Address        string     `json:"address"`
 	City           string     `json:"city"`
 	State          string     `json:"state"`
-	ZipCode        string     `json:"zip_code"`
 	ProfilePicture string     `json:"profile_picture"`
 	CreatedAt      time.Time  `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
 	UpdatedAt      *time.Time `json:"updated_at" gorm:"-"`
