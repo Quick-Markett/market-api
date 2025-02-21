@@ -1,6 +1,8 @@
 package routes
 
 import (
+	"log"
+
 	"github.com/gin-gonic/gin"
 	categoriesRoutes "main.go/http/routes/categories"
 	healthRoutes "main.go/http/routes/health"
@@ -13,43 +15,37 @@ import (
 )
 
 func HandleRequest(r *gin.Engine) {
-	ordersPath := r.Group("/orders")
-	{
+	ordersPath := r.Group("/orders"); {
 		ordersRoutes.RegisterOrdersRoutes(ordersPath)
 	}
 
-	usersPath := r.Group("/users")
-	{
+	usersPath := r.Group("/users"); {
 		userRoutes.RegisterUsersRoutes(usersPath)
 	}
 
-	marketsPath := r.Group("/markets")
-	{
+	marketsPath := r.Group("/markets"); {
 		marketRoutes.RegisterMarketsRoutes(marketsPath)
 	}
 
-	productsPath := r.Group("/products")
-	{
+	productsPath := r.Group("/products"); {
 		productsRoutes.RegisterProductsRoutes(productsPath)
 	}
 
-	orderItemsPath := r.Group("/order-items")
-	{
+	orderItemsPath := r.Group("/order-items"); {
 		orderItemsRoutes.RegisterOrderItemsRoutes(orderItemsPath)
 	}
 
-	reviewsPath := r.Group("/reviews")
-	{
+	reviewsPath := r.Group("/reviews"); {
 		reviewsRoutes.RegisterReviewRoutes(reviewsPath)
 	}
 
-	categoriesPath := r.Group("/categories")
-	{
+	categoriesPath := r.Group("/categories"); {
 		categoriesRoutes.RegisterCategoriesRoutes(categoriesPath)
 	}
 
-	healthPaths := r.Group("/health")
-	{
+	healthPaths := r.Group("/health"); {
 		healthRoutes.RegisterHealthRoutes(healthPaths)
 	}
+
+	log.Fatal(r.Run(":3030"))
 }

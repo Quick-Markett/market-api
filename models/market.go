@@ -4,6 +4,7 @@ import "time"
 
 type Market struct {
 	ID              uint       `json:"id" gorm:"primary_key"`
+	Slug            string     `json:"slug" gorm:"not null;unique"`
 	Name            string     `json:"name" gorm:"not null"`
 	Email           string     `json:"email" gorm:"not null;unique"`
 	PhoneNumber     string     `json:"phone_number"`

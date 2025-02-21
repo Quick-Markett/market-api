@@ -38,6 +38,16 @@ func GetMarket(c *gin.Context) {
 	response.SendGinResponse(c, http.StatusOK, market, nil, "")
 }
 
+func GetMarketBySlug(c *gin.Context) {
+	slug := c.Param("slug")
+	var market models.Market
+	if err := database.PostgresInstance.Where("slug = ?", slug).First(&market).Error; err != nil {
+		response.SendGinResponse(c, http.StatusNotFound, nil, nil, "Market not found")
+		return
+	}
+	response.SendGinResponse(c, http.StatusOK, market, nil, "")
+}
+
 func CreateMarket(c *gin.Context) {
 	var input CreateMarketInput
 	if err := c.ShouldBindJSON(&input); err != nil {
