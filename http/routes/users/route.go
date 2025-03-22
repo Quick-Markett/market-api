@@ -18,9 +18,9 @@ func RegisterUsersRoutes(r *gin.RouterGroup) {
 
 	// SSO
 	r.POST("/sso/create-user", sso.CreateUserWithSSO)
-	r.POST("/sso/login-user/:email", sso.LoginUserWithSso)
+	r.GET("/sso/login-user/:email", sso.LoginUserWithSso)
 
 	// Google
 	r.POST("/google/create-user", google.LoginUserWithGoogle)
-	r.POST("/google/login-user/:googleId", google.LoginUserWithGoogle)
+	r.GET("/google/login-user/:googleId", google.LoginUserWithGoogle)
 }

@@ -31,7 +31,7 @@ func GetMarkets(c *gin.Context) {
 func GetMarket(c *gin.Context) {
 	id := c.Param("id")
 	var market models.Market
-	if err := database.PostgresInstance.First(&market, id).Error; err != nil {
+	if err := database.PostgresInstance.Preload("User").First(&market, id).Error; err != nil {
 		response.SendGinResponse(c, http.StatusNotFound, nil, nil, "Market not found")
 		return
 	}
@@ -41,7 +41,7 @@ func GetMarket(c *gin.Context) {
 func GetMarketBySlug(c *gin.Context) {
 	slug := c.Param("slug")
 	var market models.Market
-	if err := database.PostgresInstance.Where("slug = ?", slug).First(&market).Error; err != nil {
+	if err := database.PostgresInstance.Preload("User").Where("slug = ?", slug).First(&market).Error; err != nil {
 		response.SendGinResponse(c, http.StatusNotFound, nil, nil, "Market not found")
 		return
 	}

@@ -21,6 +21,9 @@ type Market struct {
 	UpdatedAt       *time.Time `json:"updated_at" gorm:"-"`
 	IsActive        bool       `json:"is_active" gorm:"default:true"`
 	DeletedAt       *time.Time `json:"deleted_at" gorm:"index"`
+	OwnerId         int        `json:"owner_id"`
+
+	User User `json:"owner" gorm:"foreignKey:OwnerId;references:ID"`
 }
 
 func (Market) TableName() string {
