@@ -10,18 +10,6 @@ import (
 	response "main.go/pkg/response"
 )
 
-type CreateMarketInput struct {
-	Name        string `json:"name" binding:"required"`
-	Email       string `json:"email" binding:"required,email"`
-	PhoneNumber string `json:"phone_number"`
-	Address     string `json:"address"`
-	City        string `json:"city"`
-	State       string `json:"state"`
-	ZipCode     string `json:"zip_code"`
-	Description string `json:"description"`
-	LogoUrl     string `json:"logo_url"`
-}
-
 func GetMarkets(c *gin.Context) {
 	var markets []models.Market
 	database.PostgresInstance.Find(&markets)
@@ -49,30 +37,19 @@ func GetMarketBySlug(c *gin.Context) {
 }
 
 func CreateMarket(c *gin.Context) {
-	var input CreateMarketInput
-	if err := c.ShouldBindJSON(&input); err != nil {
+	var newMarket models.Market
+
+	if err := c.ShouldBindJSON(&newMarket); err != nil {
 		response.SendGinResponse(c, http.StatusBadRequest, nil, nil, "Invalid JSON to create market.")
 		return
 	}
 
-	market := models.Market{
-		Name:        input.Name,
-		Email:       input.Email,
-		PhoneNumber: input.PhoneNumber,
-		Address:     input.Address,
-		City:        input.City,
-		State:       input.State,
-		ZipCode:     input.ZipCode,
-		Description: input.Description,
-		LogoUrl:     input.LogoUrl,
-	}
-
-	if err := database.PostgresInstance.Create(&market).Error; err != nil {
+	if err := database.PostgresInstance.Create(&newMarket).Error; err != nil {
 		response.SendGinResponse(c, http.StatusInternalServerError, nil, nil, "Failed to create a new market.")
 		return
 	}
 
-	response.SendGinResponse(c, http.StatusCreated, market, nil, "")
+	response.SendGinResponse(c, http.StatusCreated, newMarket, nil, "")
 }
 
 func UpdateMarket(c *gin.Context) {
