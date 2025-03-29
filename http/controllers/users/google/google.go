@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"net/http"
-
 	"github.com/gin-gonic/gin"
 	"main.go/database"
 	"main.go/models"
@@ -11,6 +10,7 @@ import (
 
 func CreateUserWithGoogle(c *gin.Context) {
 	var newUser models.User
+
 	if err := c.ShouldBindJSON(&newUser); err != nil {
 		response.SendGinResponse(c, http.StatusNotFound, nil, nil, "Invalid JSON to create user with google AuthO2.")
 		return

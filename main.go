@@ -1,22 +1,16 @@
 package main
 
 import (
-	"fmt"
-
-	"main.go/database"
-	"main.go/http/routes"
-
-	"github.com/aws/aws-lambda-go/events"
-	"github.com/aws/aws-lambda-go/lambda"
-	ginadapter "github.com/awslabs/aws-lambda-go-api-proxy/gin"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"main.go/database"
+	"main.go/http/routes"
 	middlewares "main.go/middlewares"
 )
 
-var ginLambda *ginadapter.GinLambda
+// var ginLambda *ginadapter.GinLambda
 
-func init() {
+func main() {
 	r := gin.Default()
 
 	middlewares.PrometheusInit()
@@ -32,14 +26,9 @@ func init() {
 
 	database.ConnectWithDatabase()
 	routes.HandleRequest(r)
-	ginLambda = ginadapter.New(r)
+	// ginLambda = ginadapter.New(r)
 }
 
-func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
-	return ginLambda.Proxy(req)
-}
-
-func main() {
-	fmt.Println("Iniciando projeto do mercadinho...")
-	lambda.Start(Handler)
-}
+// func Handler(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+// 	return ginLambda.Proxy(req)
+// }
