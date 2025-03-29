@@ -33,3 +33,6 @@
 coverage/
 .coverage
 coverage.out
+
+# Go Air
+/tmp/
