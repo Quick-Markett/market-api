@@ -9,9 +9,9 @@ import (
 func RegisterOrderItemsRoutes(r *gin.RouterGroup) {
 	r.Use(middleware.ContentTypeMiddleware())
 
-	r.POST("", controllers.CreateOrderItem)
-	r.GET(":id", controllers.GetOrderItemById)
-	r.PUT(":id", controllers.UpdateOrderItem)
-	r.DELETE(":id", controllers.DeleteOrderItem)
-	r.GET("/get-order-items/:id", controllers.GetOrderItems)
+	r.POST("", middleware.JWTMiddleware(), controllers.CreateOrderItem)
+	r.GET(":id", middleware.JWTMiddleware(), controllers.GetOrderItemById)
+	r.PUT(":id", middleware.JWTMiddleware(), controllers.UpdateOrderItem)
+	r.DELETE(":id", middleware.JWTMiddleware(), controllers.DeleteOrderItem)
+	r.GET("/get-order-items/:id", middleware.JWTMiddleware(), controllers.GetOrderItems)
 }

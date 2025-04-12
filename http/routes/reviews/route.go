@@ -9,9 +9,9 @@ import (
 func RegisterReviewRoutes(r *gin.RouterGroup) {
 	r.Use(middleware.ContentTypeMiddleware())
 
-	r.POST("", controllers.CreateReview)
+	r.POST("", middleware.JWTMiddleware(), controllers.CreateReview)
 	r.GET(":id", controllers.GetReviewById)
-	r.PUT(":id", controllers.UpdateReview)
-	r.DELETE(":id", controllers.DeleteReview)
+	r.PUT(":id", middleware.JWTMiddleware(), controllers.UpdateReview)
+	r.DELETE(":id", middleware.JWTMiddleware(), controllers.DeleteReview)
 	r.GET("/get-order-review/:id", controllers.GetOrderReview)
 }

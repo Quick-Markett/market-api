@@ -3,6 +3,7 @@ package controllers
 import (
 	"net/http"
 	"os"
+	"time"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
@@ -11,6 +12,19 @@ import (
 	"main.go/models"
 	response "main.go/pkg/response"
 )
+
+func generateJWT(user models.User) (string, error) {
+	secret := os.Getenv("JWT_SECRET")
+
+	claims := jwt.MapClaims{
+		"id":    user.ID,
+		"email": user.Email,
+		"exp":   time.Now().Add(2 * time.Hour).Unix(),
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	return token.SignedString([]byte(secret))
+}
 
 func generateHash(password string) (string, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
@@ -21,8 +35,8 @@ func generateHash(password string) (string, error) {
 }
 
 func compareHash(password, hash string) bool {
-    err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
-    return err == nil
+	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
+	return err == nil
 }
 
 func CreateUserWithSSO(c *gin.Context) {
@@ -39,7 +53,7 @@ func CreateUserWithSSO(c *gin.Context) {
 	claims := jwt.MapClaims{}
 
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
-		secretKey := os.Getenv("SECRET_KEY_SSO_TOKEN")
+		secretKey := os.Getenv("JWT_SECRET")
 		return []byte(secretKey), nil
 	})
 
@@ -90,7 +104,7 @@ func LoginUserWithSso(c *gin.Context) {
 	claims := jwt.MapClaims{}
 
 	token, err := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
-		secretKey := os.Getenv("SECRET_KEY_SSO_TOKEN")
+		secretKey := os.Getenv("JWT_SECRET")
 		return []byte(secretKey), nil
 	})
 
@@ -124,5 +138,14 @@ func LoginUserWithSso(c *gin.Context) {
 		return
 	}
 
-	response.SendGinResponse(c, http.StatusOK, user, nil, "")
+	newToken, err := generateJWT(user)
+	if err != nil {
+		response.SendGinResponse(c, http.StatusInternalServerError, nil, nil, "Failed to generate token.")
+		return
+	}
+
+	response.SendGinResponse(c, http.StatusOK, gin.H{
+		"user":  user,
+		"token": newToken,
+	}, nil, "")
 }

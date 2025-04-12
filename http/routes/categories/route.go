@@ -9,9 +9,9 @@ import (
 func RegisterCategoriesRoutes(r *gin.RouterGroup) {
 	r.Use(middleware.ContentTypeMiddleware())
 
-	r.POST("", controllers.CreateCategory)
-	r.GET(":id", controllers.GetCategoryById)
-	r.PUT(":id", controllers.UpdateCategory)
-	r.DELETE(":id", controllers.DeleteCategory)
-	r.GET("/get-market-categories/:id", controllers.GetMarketCategories)
+	r.POST("", middleware.JWTMiddleware(), controllers.CreateCategory)
+	r.GET(":id", middleware.JWTMiddleware(), controllers.GetCategoryById)
+	r.PUT(":id", middleware.JWTMiddleware(), controllers.UpdateCategory)
+	r.DELETE(":id", middleware.JWTMiddleware(), controllers.DeleteCategory)
+	r.GET("/get-market-categories/:id", middleware.JWTMiddleware(), controllers.GetMarketCategories)
 }

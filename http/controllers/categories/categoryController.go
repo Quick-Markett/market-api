@@ -39,17 +39,22 @@ func GetCategoryById(c *gin.Context) {
 }
 
 func GetMarketCategories(c *gin.Context) {
-	marketID := c.Param("id")
-	var categories []models.Category
-
-	result := database.PostgresInstance.Where("market_id = ?", marketID).Find(&categories)
-	if result.Error != nil {
-		response.SendGinResponse(c, http.StatusInternalServerError, nil, nil, "Failed to retrieve categories.")
+	userID, exists := c.Get("userID")
+	if !exists {
+		response.SendGinResponse(c, http.StatusUnauthorized, nil, nil, "User not authenticated.")
 		return
 	}
 
-	if len(categories) == 0 {
-		response.SendGinResponse(c, http.StatusNotFound, nil, nil, "No categories found for this market.")
+	var market models.Market
+	if err := database.PostgresInstance.Where("owner_id = ?", userID).First(&market).Error; err != nil {
+		response.SendGinResponse(c, http.StatusNotFound, nil, nil, "Market not found.")
+		return
+	}
+
+	var categories []models.Category
+	result := database.PostgresInstance.Where("market_id = ?", market.ID).Find(&categories)
+	if result.Error != nil {
+		response.SendGinResponse(c, http.StatusInternalServerError, nil, nil, "Failed to retrieve categories.")
 		return
 	}
 

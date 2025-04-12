@@ -55,11 +55,6 @@ func GetMarketProducts(c *gin.Context) {
 		return
 	}
 
-	if len(products) == 0 {
-		response.SendGinResponse(c, http.StatusNotFound, nil, nil, "No products found for this market.")
-		return
-	}
-
 	response.SendGinResponse(c, http.StatusOK, products, nil, "")
 }
 
@@ -126,11 +121,6 @@ func GetFilteredProducts(c *gin.Context) {
 	result := query.Find(&products)
 	if result.Error != nil {
 		response.SendGinResponse(c, http.StatusInternalServerError, nil, nil, "Failed to retrieve products.")
-		return
-	}
-
-	if len(products) == 0 {
-		response.SendGinResponse(c, http.StatusNotFound, nil, nil, "No products found.")
 		return
 	}
 

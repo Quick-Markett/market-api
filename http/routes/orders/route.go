@@ -9,10 +9,10 @@ import (
 func RegisterOrdersRoutes(r *gin.RouterGroup) {
 	r.Use(middleware.ContentTypeMiddleware())
 
-	r.POST("", controllers.CreateOrder)
-	r.GET(":id", controllers.GetOrderById)
-	r.PUT(":id", controllers.UpdateOrder)
-	r.DELETE(":id", controllers.DeleteOrder)
-	r.GET("/get-market-orders/:id", controllers.GetMarketOrders)
-	r.GET("/get-user-orders/:userId", controllers.GetUserOrderItems)
+	r.POST("", middleware.JWTMiddleware(), controllers.CreateOrder)
+	r.GET(":id", middleware.JWTMiddleware(), controllers.GetOrderById)
+	r.PUT(":id", middleware.JWTMiddleware(), controllers.UpdateOrder)
+	r.DELETE(":id", middleware.JWTMiddleware(), controllers.DeleteOrder)
+	r.GET("/get-market-orders/:id", middleware.JWTMiddleware(), controllers.GetMarketOrders)
+	r.GET("/get-user-orders/:userId", middleware.JWTMiddleware(), controllers.GetUserOrderItems)
 }

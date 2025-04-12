@@ -2,11 +2,28 @@ package controllers
 
 import (
 	"net/http"
+	"os"
+	"time"
+
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"main.go/database"
 	"main.go/models"
 	response "main.go/pkg/response"
 )
+
+func generateJWT(user models.User) (string, error) {
+	secret := os.Getenv("JWT_SECRET")
+
+	claims := jwt.MapClaims{
+		"id":    user.ID,
+		"email": user.Email,
+		"exp":   time.Now().Add(2 * time.Hour).Unix(),
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	return token.SignedString([]byte(secret))
+}
 
 func CreateUserWithGoogle(c *gin.Context) {
 	var newUser models.User
@@ -35,5 +52,14 @@ func LoginUserWithGoogle(c *gin.Context) {
 		return
 	}
 
-	response.SendGinResponse(c, http.StatusOK, user, nil, "")
+	tokenString, err := generateJWT(user)
+	if err != nil {
+		response.SendGinResponse(c, http.StatusInternalServerError, nil, nil, "Failed to generate JWT token.")
+		return
+	}
+
+	response.SendGinResponse(c, http.StatusOK, gin.H{
+		"user":  user,
+		"token": tokenString,
+	}, nil, "")
 }

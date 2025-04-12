@@ -12,10 +12,10 @@ func RegisterMarketsRoutes(r *gin.RouterGroup) {
 	r.GET("", controllers.GetMarkets)
 	r.GET(":id", controllers.GetMarket)
 	r.GET("/get-market-by-slug/:slug", controllers.GetMarketBySlug)
-	r.POST("", controllers.CreateMarket)
-	r.PUT(":id", controllers.UpdateMarket)
-	r.DELETE(":id", controllers.DeleteMarket)
+	r.POST("", middleware.JWTMiddleware(), controllers.CreateMarket)
+	r.PUT(":id", middleware.JWTMiddleware(), controllers.UpdateMarket)
+	r.DELETE(":id", middleware.JWTMiddleware(), controllers.DeleteMarket)
 
 	// NEARBY MARKETS
-	r.POST("/nearby", controllers.FindMarketsWithinRadius)
+	r.POST("/nearby", middleware.JWTMiddleware(), controllers.FindMarketsWithinRadius)
 }
