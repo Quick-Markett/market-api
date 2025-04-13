@@ -17,7 +17,10 @@ var (
 )
 
 func setup(db *gorm.DB) {
-	db.AutoMigrate(&models.User{}, &models.Product{}, &models.Market{}, &models.Order{}, &models.OrderItem{}, &models.Review{}, &models.Category{})
+    if err := db.AutoMigrate(&models.User{}, &models.Product{}, &models.Market{}, &models.Order{}, &models.OrderItem{}, &models.Review{}, &models.Category{}); err != nil {
+        log.Fatalf("Erro ao migrar as tabelas: %v", err)
+    }
+    log.Println("Migração realizada com sucesso!")
 }
 
 func ConnectWithDatabase() {
@@ -31,7 +34,7 @@ func ConnectWithDatabase() {
 		log.Fatal("Database url is not set in the environment.")
 	}
 
-	PostgresInstance, err = gorm.Open(postgres.New(postgres.Config{
+	PostgresInstance, _ = gorm.Open(postgres.New(postgres.Config{
 		DSN: databaseConnection,
 	}), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info),
