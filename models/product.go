@@ -4,6 +4,7 @@ import "time"
 
 type Product struct {
 	ID                 uint       `json:"id" gorm:"primaryKey;autoIncrement"`
+	Slug               string     `json:"slug"`
 	MarketId           int        `json:"market_id"`
 	ProductName        string     `json:"product_name"`
 	ProductDescription string     `json:"product_description"`
