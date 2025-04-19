@@ -4,6 +4,7 @@ import "time"
 
 type Order struct {
 	ID              uint       `json:"id" gorm:"primaryKey;autoIncrement"`
+	Code            string     `json:"code"`
 	UserId          int        `json:"user_id"`
 	MarketId        int        `json:"market_id"`
 	Status          string     `json:"status"`
