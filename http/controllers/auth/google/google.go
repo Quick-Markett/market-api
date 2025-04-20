@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 	"time"
@@ -43,14 +44,26 @@ func CreateUserWithGoogle(c *gin.Context) {
 }
 
 func LoginUserWithGoogle(c *gin.Context) {
-	googleId := c.Param("googleId")
+	type GoogleLoginPayload struct {
+		GoogleId string `json:"google_id"`
+	}
+
+	var payload GoogleLoginPayload
+
+	if err := c.ShouldBindJSON(&payload); err != nil {
+		response.SendGinResponse(c, http.StatusBadRequest, nil, nil, "Invalid JSON to create user with google AuthO2.")
+		return
+	}
+
 	var user models.User
 
-	result := database.PostgresInstance.Where("google_id = ?", googleId).First(&user)
+	result := database.PostgresInstance.Where("google_id = ?", payload.GoogleId).First(&user)
 	if result.Error != nil {
 		response.SendGinResponse(c, http.StatusNotFound, nil, nil, "User not found.")
 		return
 	}
+
+	fmt.Println("User ID:", user.ID)
 
 	tokenString, err := generateJWT(user)
 	if err != nil {

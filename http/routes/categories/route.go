@@ -11,7 +11,7 @@ func RegisterCategoriesRoutes(r *gin.RouterGroup) {
 
 	r.POST("", middleware.JWTMiddleware(), controllers.CreateCategory)
 	r.GET(":id", middleware.JWTMiddleware(), controllers.GetCategoryById)
-	r.PUT(":id", middleware.JWTMiddleware(), controllers.UpdateCategory)
+	r.PUT("/:id", middleware.JWTMiddleware(), controllers.UpdateCategory)
 	r.DELETE(":id", middleware.JWTMiddleware(), controllers.DeleteCategory)
 	r.GET("/get-market-categories", middleware.JWTMiddleware(), controllers.GetMarketCategories)
 }

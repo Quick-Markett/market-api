@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -62,21 +63,32 @@ func GetMarketCategories(c *gin.Context) {
 }
 
 func UpdateCategory(c *gin.Context) {
-	id := c.Param("id")
+	categoryId := c.Param("id")
+
+	var request struct {
+		Name        string `json:"name"`
+		Description string `json:"description"`
+	}
+
+	if err := c.ShouldBindJSON(&request); err != nil {
+		response.SendGinResponse(c, http.StatusNotFound, nil, nil, "Invalid JSON to update categories.")
+		return
+	}
+
 	var category models.Category
 
-	if err := database.PostgresInstance.First(&category, id).Error; err != nil {
+	fmt.Println(categoryId)
+
+	if err := database.PostgresInstance.First(&category, categoryId).Error; err != nil {
 		response.SendGinResponse(c, http.StatusNotFound, nil, nil, "Category not found.")
 		return
 	}
 
-	var updatedData models.Category
-	if err := c.ShouldBindJSON(&updatedData); err != nil {
-		response.SendGinResponse(c, http.StatusBadRequest, nil, nil, "Invalid JSON for updating the category.")
-		return
-	}
+	result := database.PostgresInstance.Model(&category).Updates(map[string]interface{}{
+		"name":        request.Name,
+		"description": request.Description,
+	})
 
-	result := database.PostgresInstance.Model(&category).Updates(updatedData)
 	if result.Error != nil {
 		response.SendGinResponse(c, http.StatusInternalServerError, nil, nil, "Failed to update the category.")
 		return
