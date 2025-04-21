@@ -14,7 +14,8 @@ import (
 
 func RefreshToken(c *gin.Context) {
 	var request struct {
-		Token string `json:"token"`
+		Token        string `json:"token"`
+		RefreshToken string `json:"refresh_token"`
 	}
 
 	if err := c.ShouldBindJSON(&request); err != nil {
@@ -22,9 +23,7 @@ func RefreshToken(c *gin.Context) {
 		return
 	}
 
-	// Parse the token without validating exp
 	token, err := jwt.Parse(request.Token, func(token *jwt.Token) (interface{}, error) {
-		// Make sure the signing method is what you expect
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
@@ -55,4 +54,3 @@ func RefreshToken(c *gin.Context) {
 		"token": signedToken,
 	}, nil, "")
 }
-
