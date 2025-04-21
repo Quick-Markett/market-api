@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -40,14 +39,10 @@ func GetCategoryById(c *gin.Context) {
 }
 
 func GetMarketCategories(c *gin.Context) {
-	userID, exists := c.Get("userID")
-	if !exists {
-		response.SendGinResponse(c, http.StatusUnauthorized, nil, nil, "User not authenticated.")
-		return
-	}
+	marketSlug := c.Param("slug")
 
 	var market models.Market
-	if err := database.PostgresInstance.Where("owner_id = ?", userID).First(&market).Error; err != nil {
+	if err := database.PostgresInstance.Where("slug = ?", marketSlug).First(&market).Error; err != nil {
 		response.SendGinResponse(c, http.StatusNotFound, nil, nil, "Market not found.")
 		return
 	}
@@ -77,8 +72,6 @@ func UpdateCategory(c *gin.Context) {
 
 	var category models.Category
 
-	fmt.Println(categoryId)
-
 	if err := database.PostgresInstance.First(&category, categoryId).Error; err != nil {
 		response.SendGinResponse(c, http.StatusNotFound, nil, nil, "Category not found.")
 		return
@@ -94,7 +87,7 @@ func UpdateCategory(c *gin.Context) {
 		return
 	}
 
-	response.SendGinResponse(c, http.StatusOK, category, nil, "")
+	response.SendGinResponse(c, http.StatusOK, result, nil, "")
 }
 
 func DeleteCategory(c *gin.Context) {

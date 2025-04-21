@@ -59,27 +59,44 @@ func GetMarketProducts(c *gin.Context) {
 }
 
 func UpdateProduct(c *gin.Context) {
-	id := c.Param("id")
+	productId := c.Param("id")
+
+	var request struct {
+		Name        string `json:"product_name"`
+		Description string `json:"product_description"`
+		Slug        string `json:"slug"`
+		Image       string `json:"product_image"`
+		UnitPrice   string `json:"unit_price"`
+		Stock       string `json:"stock"`
+	}
+
+	if err := c.ShouldBindJSON(&request); err != nil {
+		response.SendGinResponse(c, http.StatusNotFound, nil, nil, "Invalid JSON to update products.")
+		return
+	}
+
 	var product models.Product
 
-	if err := database.PostgresInstance.First(&product, id).Error; err != nil {
+	if err := database.PostgresInstance.First(&product, productId).Error; err != nil {
 		response.SendGinResponse(c, http.StatusNotFound, nil, nil, "Product not found.")
 		return
 	}
 
-	var updatedData models.Product
-	if err := c.ShouldBindJSON(&updatedData); err != nil {
-		response.SendGinResponse(c, http.StatusBadRequest, nil, nil, "Invalid JSON for updating the product.")
-		return
-	}
+	result := database.PostgresInstance.Model(&product).Updates(map[string]interface{}{
+		"product_name":        request.Name,
+		"product_description": request.Description,
+		"slug":                request.Slug,
+		"product_image":       request.Image,
+		"unit_price":          request.UnitPrice,
+		"stock":               request.Stock,
+	})
 
-	result := database.PostgresInstance.Model(&product).Updates(updatedData)
 	if result.Error != nil {
-		response.SendGinResponse(c, http.StatusInternalServerError, nil, nil, "Failed to update the product.")
+		response.SendGinResponse(c, http.StatusInternalServerError, nil, nil, "Failed to update the category.")
 		return
 	}
 
-	response.SendGinResponse(c, http.StatusOK, product, nil, "")
+	response.SendGinResponse(c, http.StatusOK, result, nil, "")
 }
 
 func DeleteProduct(c *gin.Context) {

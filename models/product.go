@@ -14,10 +14,12 @@ type Product struct {
 	CreatedAt          time.Time  `json:"created_at"`
 	UpdatedAt          *time.Time `json:"updated_at" gorm:"-"`
 	IsActive           bool       `json:"is_active" gorm:"default:true"`
+	CategoryId         *int        `json:"category_id"`
 	// Category           string  `json:"category" gorm:"type:product_category;default:'Food'"`
 	// TODO: precisamos ver depois quais serão as categorias, por enquanto este enum é apenas um exemplo
 
-	Market Market `json:"market" gorm:"foreignKey:MarketId;references:ID"`
+	Market   Market   `json:"market" gorm:"foreignKey:MarketId;references:ID"`
+	Category Category `json:"category" gorm:"foreignKey:CategoryId;references:ID"`
 }
 
 var Products []Product
