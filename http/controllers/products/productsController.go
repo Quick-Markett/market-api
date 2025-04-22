@@ -40,11 +40,18 @@ func GetProductById(c *gin.Context) {
 }
 
 func GetMarketProducts(c *gin.Context) {
-	marketID := c.Param("id")
+	slug := c.Param("slug")
+
+	var market models.Market
+	if err := database.PostgresInstance.Where("slug = ?", slug).First(&market).Error; err != nil {
+		response.SendGinResponse(c, http.StatusNotFound, nil, nil, "Market not found.")
+		return
+	}
+
 	category := c.Query("category")
 	var products []models.Product
 
-	query := database.PostgresInstance.Where("market_id = ?", marketID)
+	query := database.PostgresInstance.Where("market_id = ?", market.ID)
 	if category != "" {
 		query = query.Where("category = ?", category)
 	}
@@ -114,6 +121,51 @@ func DeleteProduct(c *gin.Context) {
 	}
 
 	response.SendGinResponse(c, http.StatusOK, nil, nil, "")
+}
+
+func GetMappedProductsByCategory(c *gin.Context) {
+	marketSlug := c.Param("slug")
+	var market models.Market
+
+	if err := database.PostgresInstance.Where("slug = ?", marketSlug).First(&market).Error; err != nil {
+		response.SendGinResponse(c, http.StatusNotFound, nil, nil, "Market not found.")
+		return
+	}
+
+	var categories []models.Category
+	if err := database.PostgresInstance.
+		Preload("Products").
+		Where("market_id = ?", market.ID).
+		Find(&categories).Error; err != nil {
+		response.SendGinResponse(c, http.StatusInternalServerError, nil, nil, "Error fetching categories.")
+		return
+	}
+
+	var mappedItems []map[string]interface{}
+	for _, category := range categories {
+		var products []map[string]interface{}
+		for _, product := range category.Products {
+			if product.IsActive {
+				products = append(products, map[string]interface{}{
+					"id":                  product.ID,
+					"product_name":        product.ProductName,
+					"slug":                product.Slug,
+					"unit_price":          product.UnitPrice,
+					"product_image":       product.ProductImage,
+					"product_description": product.ProductDescription,
+				})
+			}
+		}
+
+		if len(products) > 0 {
+			mappedItems = append(mappedItems, map[string]interface{}{
+				"category": category.Name,
+				"products": products,
+			})
+		}
+	}
+
+	response.SendGinResponse(c, http.StatusOK, mappedItems, nil, "")
 }
 
 func GetFilteredProducts(c *gin.Context) {

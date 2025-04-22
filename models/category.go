@@ -11,7 +11,8 @@ type Category struct {
 	CreatedAt   time.Time  `json:"created_at" gorm:"default:CURRENT_TIMESTAMP"`
 	UpdatedAt   *time.Time `json:"updated_at" gorm:"-"`
 
-	Market Market `json:"market" gorm:"foreignKey:MarketId;references:ID"`
+	Market   Market    `json:"market" gorm:"foreignKey:MarketId;references:ID"`
+	Products []Product `json:"products" gorm:"foreignKey:CategoryId;references:ID"`
 }
 
 var Categories []Category
