@@ -7,7 +7,7 @@ services:
     volumes:
       - redis-data:/data
     networks:
-      - bridge
+      - monitoring
 
   redis-client:
     image: redis:latest
@@ -18,21 +18,21 @@ services:
     stdin_open: true
     tty: true
     networks:
-      - bridge
+      - monitoring
 
   postgres:
-    image: postgres:latest
+    image: postgres:15
     container_name: postgres-db
     ports:
       - "5432:5432"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=mydatabase
+      - POSTGRES_DB=database
     volumes:
       - postgres-data:/var/lib/postgresql/data
     networks:
-      - bridge
+      - monitoring
 
   prometheus:
     image: prom/prometheus:latest
@@ -48,7 +48,7 @@ services:
     image: grafana/grafana-oss:latest
     container_name: grafana
     ports:
-      - "3000:3000"
+      - "3001:300"
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     networks:
@@ -59,6 +59,9 @@ services:
   hermes-api:
     build: .
     container_name: hermes-api
+    depends_on:
+      - redis
+      - postgres
     ports:
       - "8081:8080"
     networks:

@@ -17,10 +17,10 @@ var (
 )
 
 func setup(db *gorm.DB) {
-    if err := db.AutoMigrate(&models.User{}, &models.Product{}, &models.Market{}, &models.Order{}, &models.OrderItem{}, &models.Review{}, &models.Category{}); err != nil {
-        log.Fatalf("Erro ao migrar as tabelas: %v", err)
-    }
-    log.Println("Migração realizada com sucesso!")
+	if err := db.AutoMigrate(&models.User{}, &models.Product{}, &models.Market{}, &models.Order{}, &models.OrderItem{}, &models.Review{}, &models.Category{}); err != nil {
+		log.Fatalf("Erro ao migrar as tabelas: %v", err)
+	}
+	log.Println("Migração realizada com sucesso!")
 }
 
 func ConnectWithDatabase() {
@@ -29,9 +29,16 @@ func ConnectWithDatabase() {
 		log.Fatal("Error loading .env file.")
 	}
 
-	databaseConnection := os.Getenv("DATABASE_URL")
-	if databaseConnection == "" {
-		log.Fatal("Database url is not set in the environment.")
+	appEnv := os.Getenv("APP_ENV")
+	databaseConnection := ""
+
+	if appEnv == "PROD" {
+		databaseConnection = os.Getenv("DATABASE_URL")
+		if databaseConnection == "" {
+			log.Fatal("Database url is not set in the environment.")
+		}
+	} else {
+		databaseConnection = "host=localhost user=postgres password=password dbname=database port=5432 sslmode=disable"
 	}
 
 	PostgresInstance, _ = gorm.Open(postgres.New(postgres.Config{
